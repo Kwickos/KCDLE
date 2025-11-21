@@ -1,73 +1,82 @@
-# React + TypeScript + Vite
+# 🟦 KCDLE - Karmine Corp Wordle
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Bienvenue sur **KCDLE**, un jeu inspiré de Wordle et Loldle, dédié aux fans de la **Karmine Corp** ! Testez vos connaissances sur les joueurs, le staff et les légendes du Blue Wall.
 
-Currently, two official plugins are available:
+![KCDLE Banner](https://via.placeholder.com/800x200?text=KCDLE+Banner)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🎮 Modes de Jeu
 
-## React Compiler
+### 1. Classic Mode
+Devinez le membre de la Karmine Corp du jour !
+- **Indices** : Rôle, Jeu, Ligue, Nationalité, Année d'arrivée, Statut.
+- **Code couleur** :
+  - 🟩 **Vert** : Correspondance exacte.
+  - 🟧 **Orange** : Partiellement correct (ex: même jeu mais mauvais rôle).
+  - 🟥 **Rouge** : Incorrect.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 2. Loldle Mode (Bientôt)
+Devinez le membre à partir d'indices visuels ou textuels :
+- **Image floutée** : Reconnaissez le joueur.
+- **Citation** : Qui a dit ça ?
 
-## Expanding the ESLint configuration
+## 🛠️ Stack Technique
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Ce projet est construit avec des technologies modernes pour assurer performance et maintenabilité :
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Frontend** : [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- **Build Tool** : [Vite](https://vitejs.dev/)
+- **Styling** : [Tailwind CSS](https://tailwindcss.com/)
+- **Backend / Database** : [Supabase](https://supabase.com/)
+- **Routing** : [React Router](https://reactrouter.com/)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🚀 Installation et Lancement
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Pour lancer le projet localement, suivez ces étapes :
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+1. **Cloner le dépôt**
+   ```bash
+   git clone https://github.com/Kwickos/KCDLE.git
+   cd KCDLE
+   ```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+2. **Installer les dépendances**
+   ```bash
+   npm install
+   ```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+3. **Configurer les variables d'environnement**
+   Créez un fichier `.env` à la racine du projet et ajoutez vos clés Supabase :
+   ```env
+   VITE_SUPABASE_URL=votre_url_supabase
+   VITE_SUPABASE_ANON_KEY=votre_cle_anon_supabase
+   ```
+
+4. **Lancer le serveur de développement**
+   ```bash
+   npm run dev
+   ```
+
+## 👑 Backoffice & Contribution
+
+Le jeu dispose d'un **Backoffice** permettant de :
+- Gérer la liste des membres (Ajout, Édition, Suppression).
+- Modérer les suggestions de la communauté.
+
+Les utilisateurs peuvent suggérer des modifications (ajout de nouveaux joueurs, corrections) directement depuis l'interface, qui seront ensuite validées par les administrateurs.
+
+## 🤝 Contribuer
+
+Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une **Issue** ou une **Pull Request** pour proposer des améliorations.
+
+1. Forkez le projet
+2. Créez votre branche (`git checkout -b feature/AmazingFeature`)
+3. Committez vos changements (`git commit -m 'Add some AmazingFeature'`)
+4. Pushez vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrez une Pull Request
+
+## 📄 Licence
+
+Distribué sous la licence MIT. Voir `LICENSE` pour plus d'informations.
+
+---
+*Fait avec 💙 par le Blue Wall.*
