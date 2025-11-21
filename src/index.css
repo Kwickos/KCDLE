@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@theme {
+  --color-kc-blue: #0c2045;
+  --color-kc-lightBlue: #1a3c7a;
+  --color-kc-gold: #c5b358;
+  --color-kc-white: #ffffff;
+  --color-kc-dark: #050e1f;
+
+  --animate-bounce-short: bounce 0.5s ease-in-out 1;
+  --animate-shake: shake 0.5s ease-in-out 1;
+
+  @keyframes shake {
+
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+      transform: translateX(-5px);
+    }
+
+    20%,
+    40%,
+    60%,
+    80% {
+      transform: translateX(5px);
+    }
+  }
+
+  @keyframes flip {
+    0% {
+      transform: rotateX(0);
+    }
+
+    100% {
+      transform: rotateX(360deg);
+    }
+  }
+}
+
+body {
+  @apply bg-kc-dark text-white;
+}
