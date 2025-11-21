@@ -40,54 +40,24 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>
 }
 
-function Game() {
+function Game({ members }: { members: KCMember[] }) {
   const [mode, setMode] = useState<GameMode>('WORDLE')
-  const [members, setMembers] = useState<KCMember[]>([])
-  const [loading, setLoading] = useState(true)
 
   // Wordle State
   const [solution, setSolution] = useState<string | null>(null)
   const [words, setWords] = useState<string[]>([])
-  const [isSuggestionModalOpen, setIsSuggestionModalOpen] = useState(false)
 
-  // Fetch members on mount
+  // Initialize game data when members change
   useEffect(() => {
-    const fetchMembers = async () => {
-      const { data, error } = await supabase
-        .from('members')
-        .select('*')
-
-      if (error) {
-        console.error('Error fetching members:', error)
-      } else if (data) {
-        // Transform DB data to KCMember (snake_case to camelCase if needed, but we used snake_case in DB)
-        // Actually we need to map snake_case DB columns to camelCase TS interface
-        const formattedMembers: KCMember[] = data.map((m: any) => ({
-          id: m.id,
-          name: m.name,
-          role: m.role,
-          game: m.game,
-          league: m.league,
-          nationality: m.nationality,
-          yearJoined: m.year_joined,
-          status: m.status,
-          image: m.image
-        }))
-
-        setMembers(formattedMembers)
-
-        // Prepare Wordle data
-        const wordList = formattedMembers.map(m =>
-          m.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().replace(/[^A-Z]/g, "")
-        )
-        setWords(wordList)
-        setSolution(wordList[Math.floor(Math.random() * wordList.length)])
-      }
-      setLoading(false)
+    if (members.length > 0) {
+      // Prepare Wordle data
+      const wordList = members.map(m =>
+        m.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase().replace(/[^A-Z]/g, "")
+      )
+      setWords(wordList)
+      setSolution(wordList[Math.floor(Math.random() * wordList.length)])
     }
-
-    fetchMembers()
-  }, [])
+  }, [members])
 
   const { currentGuess, guesses, turn, isCorrect, usedKeys, handleKeyup, isInvalid } = useWordle(solution || '', words)
   const [showModal, setShowModal] = useState(false)
@@ -105,7 +75,7 @@ function Game() {
     }
   }, [isCorrect, turn, handleKeyup, mode])
 
-  if (loading) {
+  if (members.length === 0) {
     return <div className="min-h-screen bg-kc-dark flex items-center justify-center text-white">Chargement...</div>
   }
 
@@ -113,7 +83,7 @@ function Game() {
 
   return (
     <div className="flex flex-col items-center w-full">
-      <header className="mb-6 border-b border-gray-700 pb-4 w-full max-w-xl flex flex-col items-center gap-4">
+      <header className="pb-4 pt-8 w-full max-w-xl flex flex-col items-center gap-4">
         <h1 className="text-4xl font-bold tracking-wider text-white drop-shadow-[0_0_10px_rgba(12,32,69,0.8)]">KCDLE</h1>
 
         <div className="flex bg-kc-blue rounded-lg p-1 gap-1">
@@ -203,28 +173,45 @@ function Game() {
         <LoldleGame members={members} />
       )}
 
-      <footer className="mt-12 text-gray-600 text-sm flex flex-col items-center gap-4">
-        <button
-          onClick={() => setIsSuggestionModalOpen(true)}
-          className="text-kc-gold hover:text-white transition-colors underline"
-        >
-          Suggérer une modification
-        </button>
-      </footer>
-      <SuggestionModal
-        isOpen={isSuggestionModalOpen}
-        onClose={() => setIsSuggestionModalOpen(false)}
-        members={members}
-      />
     </div>
   )
 }
 
 function App() {
+  const [members, setMembers] = useState<KCMember[]>([])
+  const [isSuggestionModalOpen, setIsSuggestionModalOpen] = useState(false)
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      const { data, error } = await supabase
+        .from('members')
+        .select('*')
+
+      if (error) {
+        console.error('Error fetching members:', error)
+      } else if (data) {
+        const formattedMembers: KCMember[] = data.map((m: any) => ({
+          id: m.id,
+          name: m.name,
+          role: m.role,
+          game: m.game,
+          league: m.league,
+          nationality: m.nationality,
+          yearJoined: m.year_joined,
+          status: m.status,
+          image: m.image
+        }))
+        setMembers(formattedMembers)
+      }
+    }
+
+    fetchMembers()
+  }, [])
+
   return (
     <div className="App min-h-screen bg-kc-dark text-white flex flex-col items-center">
       <Routes>
-        <Route path="/" element={<Game />} />
+        <Route path="/" element={<Game members={members} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={
           <ProtectedRoute>
@@ -233,10 +220,22 @@ function App() {
         } />
       </Routes>
 
-      <footer className="mt-auto py-6 text-gray-500 text-sm">
+      <footer className="mt-auto py-6 text-gray-500 text-sm flex flex-col items-center gap-2">
+        <button
+          onClick={() => setIsSuggestionModalOpen(true)}
+          className="text-kc-gold hover:text-white transition-colors underline"
+        >
+          Suggérer une modification
+        </button>
         <p>Fait pour les fans de la Karmine Corp 🟦</p>
         <Link to="/admin" className="opacity-0 hover:opacity-100 transition-opacity">Admin</Link>
       </footer>
+
+      <SuggestionModal
+        isOpen={isSuggestionModalOpen}
+        onClose={() => setIsSuggestionModalOpen(false)}
+        members={members}
+      />
     </div>
   )
 }
